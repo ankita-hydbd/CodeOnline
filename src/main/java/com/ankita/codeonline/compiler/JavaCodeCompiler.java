@@ -44,7 +44,7 @@ public class JavaCodeCompiler implements CodeCompiler {
     }
 
     public static void main(String[] args) {
-        String fp = "codeBlock/c2c85c9f-9bc6-4d8a-b977-e412a8fea9a5/Main.java";
+        String fp = "codeBlock/test-directory/Main.java";
         JavaCodeCompiler codeCompiler = new JavaCodeCompiler();
         System.out.println(codeCompiler.compile(Paths.get(fp)));
     }
