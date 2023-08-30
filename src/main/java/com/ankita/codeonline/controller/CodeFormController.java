@@ -1,6 +1,6 @@
 package com.ankita.codeonline.controller;
 
-import com.ankita.codeonline.helper.FileHelper;
+import com.ankita.codeonline.manager.CodeManager;
 import com.ankita.codeonline.model.CodeFormData;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class CodeFormController {
 
-    private final FileHelper fileHelper;
+    private final CodeManager codeManager;
 
     @Autowired
-    public CodeFormController(FileHelper fileHelper) {
-        this.fileHelper = fileHelper;
+    public CodeFormController(CodeManager codeManager) {
+        this.codeManager = codeManager;
     }
 
     @GetMapping("/code")
@@ -34,11 +34,10 @@ public class CodeFormController {
             @ModelAttribute final CodeFormData codeFormData,
             @NonNull final Model model) {
         log.info("Received CodeFormRequestData = {}", codeFormData);
-        final String codeFilePath = fileHelper.writeCodeToWorkspace(codeFormData.getCodeBlock());
-        log.info("Code file path = {}", codeFilePath);
-        codeFormData.setResultBlock("result is processing....");
+        final String resultBlock =
+                codeManager.runCode(codeFormData.getCodeBlock(), codeFormData.getInputBlock());
+        codeFormData.setResultBlock(resultBlock);
         model.addAttribute("codeFormData", codeFormData);
-        fileHelper.deleteCodeFromWorkspace(codeFilePath);
         return "code";
     }
 }
