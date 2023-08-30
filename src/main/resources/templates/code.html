@@ -14,12 +14,13 @@
             width: 100%;
             resize: none;
         }
-        #codeResult {
+        #resultBlock {
             border: 1px dashed black;
             padding: 10px; /* Add some padding for spacing */
             font-style: italic;
-            font-size: 20px;
+            font-size: 12px;
             color: grey;
+            white-space: pre-line;
         }
     </style>
     <body>
@@ -33,17 +34,21 @@
                 <tbody>
                     <tr>
                         <td width="75%">
-                            <textarea id="codeBlock" th:field="*{codeBlock}" rows="20" placeholder="write code here"></textarea>
+                            <textarea id="codeBlock" th:field="*{codeBlock}" rows="20"
+                                      placeholder="write code here"></textarea>
                         </td>
                         <td>
-                            <textarea id="inputBlock" th:field="*{inputBlock}" rows="20" placeholder="provide input for your code"></textarea>
+                            <textarea id="inputBlock" th:field="*{inputBlock}" rows="20"
+                                      placeholder="provide input for your code"></textarea>
                         </td>
                     </tr>
                 </tbody>
             </table>
             <button id="submitBtn">Submit / Compile & Run</button>
             <br/>
-            <p id="codeResult" th:text="${codeFormData.resultBlock}"></p>
+            <p>
+                <pre id="resultBlock" th:text="${codeFormData.resultBlock}"></pre>
+            </p>
         </form>
     </body>
 </html>
