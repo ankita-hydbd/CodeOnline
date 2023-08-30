@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title align="center">Code Online</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    </head>
+    <style>
+        #codeBlock {
+            width: 98%;
+            min-height: 50px;
+            resize: none;
+        }
+        #inputBlock {
+            width: 100%;
+            resize: none;
+        }
+        #codeResult {
+            border: 1px dashed black;
+            padding: 10px; /* Add some padding for spacing */
+            font-style: italic;
+            font-size: 20px;
+            color: grey;
+        }
+    </style>
+    <body>
+        <h1>Code Online</h1>
+        <form action="#" th:action="@{/code}" th:object="${codeFormData}" method="post">
+            <table width="100%">
+                <tr>
+                    <th>Code</th>
+                    <th>Input to code</th>
+                </tr>
+                <tbody>
+                    <tr>
+                        <td width="75%">
+                            <textarea id="codeBlock" th:field="*{codeBlock}" rows="20" placeholder="write code here"></textarea>
+                        </td>
+                        <td>
+                            <textarea id="inputBlock" th:field="*{inputBlock}" rows="20" placeholder="provide input for your code"></textarea>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button id="submitBtn">Submit / Compile & Run</button>
+            <br/>
+            <p id="codeResult" th:text="${codeFormData.resultBlock}"></p>
+        </form>
+    </body>
+</html>
