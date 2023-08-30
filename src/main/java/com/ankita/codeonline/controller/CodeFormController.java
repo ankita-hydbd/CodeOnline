@@ -34,10 +34,11 @@ public class CodeFormController {
             @ModelAttribute final CodeFormData codeFormData,
             @NonNull final Model model) {
         log.info("Received CodeFormRequestData = {}", codeFormData);
-        final String codeFilePath = fileHelper.writeFileToWorkspace(codeFormData.getCodeBlock());
+        final String codeFilePath = fileHelper.writeCodeToWorkspace(codeFormData.getCodeBlock());
         log.info("Code file path = {}", codeFilePath);
         codeFormData.setResultBlock("result is processing....");
         model.addAttribute("codeFormData", codeFormData);
+        fileHelper.deleteCodeFromWorkspace(codeFilePath);
         return "code";
     }
 }

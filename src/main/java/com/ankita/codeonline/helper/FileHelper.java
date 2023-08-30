@@ -1,12 +1,10 @@
 package com.ankita.codeonline.helper;
 
-import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,7 +18,7 @@ public class FileHelper {
     private static final String FILE_PATH_FORMAT = "%s/%s/%s";
 
     @SneakyThrows
-    public String writeFileToWorkspace(final String codeBlock) {
+    public String writeCodeToWorkspace(final String codeBlock) {
         final String randomDir = UUID.randomUUID().toString();
         final String filePathStr = FILE_PATH_FORMAT.formatted(STD_WORKSPACE, randomDir, STD_FILE_NAME);
         final Path filePath = Paths.get(filePathStr);
@@ -29,5 +27,10 @@ public class FileHelper {
         writer.write(codeBlock);
         writer.close();
         return filePathStr;
+    }
+
+    @SneakyThrows
+    public void deleteCodeFromWorkspace(final String filePath) {
+        Files.deleteIfExists(Paths.get(filePath));
     }
 }
