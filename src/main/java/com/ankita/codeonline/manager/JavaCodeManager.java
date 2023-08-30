@@ -45,10 +45,8 @@ public class JavaCodeManager implements CodeManager {
         final ExecutionResult executionResult = javaCodeExecutor.execute(codeFilePath);
         if (executionResult.getExitCode() != 0) {
             log.error("Execution failed, error = {}", executionResult.getError());
-            return executionResult.getError();
         }
-
-        return executionResult.getOutput();
+        return executionResult.getOutput() + executionResult.getError();
     }
 
     private String storeContent(final String content) {

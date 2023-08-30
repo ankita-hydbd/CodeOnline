@@ -6,6 +6,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,9 +27,26 @@ public class JavaCodeExecutor implements CodeExecutor {
 
         Process executionProcess = exeProcessBuilder.start();
 
-        // InputStream is output from the compilation command
+        // Capturing output dump if any during execution
+        final BufferedReader outputReader = new BufferedReader(new InputStreamReader(executionProcess.getInputStream()));
+        final StringBuilder outputValue = new StringBuilder();
+
+        Thread outputReaderCapture = new Thread(() -> {
+            String outputLine;
+            try {
+                while((outputLine = outputReader.readLine()) != null) {
+                    outputValue.append(outputLine);
+                }
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        outputReaderCapture.start();
+
+        // Capturing error dumps if any during execution
         BufferedReader errorReader = new BufferedReader(
-                new InputStreamReader(executionProcess.getInputStream()));
+                new InputStreamReader(executionProcess.getErrorStream()));
 
         StringBuilder errorValue = new StringBuilder();
         String errorLine;
@@ -36,11 +54,17 @@ public class JavaCodeExecutor implements CodeExecutor {
             errorValue.append(errorLine);
         }
         final int exitCode = executionProcess.waitFor();
-        log.info("Execution Complete with status = {}, Errors = {}", exitCode, errorValue);
+        outputReaderCapture.join();
+
+        // Bug : error stream is also capturing output value -> fixed now
+        // Execution Complete with status = 0, Errors = Hello world
+        log.info("Execution Complete with status = {}, Output = {}, Errors = {}",
+                exitCode, outputValue, errorValue);
 
         return ExecutionResult.builder()
                 .exitCode(exitCode)
                 .error(errorValue.toString())
+                .output(outputValue.toString())
                 .build();
     }
 
